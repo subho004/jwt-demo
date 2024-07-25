@@ -1,36 +1,67 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# JWT Demo
+
+This is a simple Next.js application demonstrating JWT authentication. It includes:
+
+- Middleware for JWT validation
+- An API route that requires JWT authentication
+- Utility functions for encoding and decoding JWTs
+- Tests for JWT functions
 
 ## Getting Started
 
-First, run the development server:
+### Clone the Repository
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+git clone https://github.com/yourusername/jwt-demo.git
+cd jwt-demo
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### Install Dependencies
+```
+npm i
+```
+### Development Server
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+To start the development server, use:
+```
+npm run dev
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+The server will be running at http://localhost:3000.
 
-## Learn More
+## Testing the API
 
-To learn more about Next.js, take a look at the following resources:
+The API endpoint is protected and requires a valid JWT for access. To generate a JWT and test the API:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+	1.	Generate a JWT
+Uncomment the lines in src/app/api/protected/route.ts to generate a JWT.
+```
+// Uncomment the following lines to generate a JWT
+// import { encodeJwt } from '../../../lib/jwt';
+// const jwt = encodeJwt(SECRET, 'user123', { name: 'John Doe' }, 3600);
+// console.log('Generated JWT:', jwt);
+```
+  2.	Test with cURL
+```
+curl -H "Authorization: Bearer YOUR_VALID_JWT" http://localhost:3000/api/protected
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+## Running Tests
 
-## Deploy on Vercel
+To run the tests for JWT functions:
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```
+npm test
+```
+This will execute the tests defined in src/tests/api.test.ts, which check the functionality of JWT encoding, decoding, and validation.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+### Example
+```
+curl -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiSm9obiBEb2UiLCJzdWIiOiJ1c2VyMTIzIiwiZXhwIjoxNzIxODc4MjE2fQ.YTJpN0wzSE44a3AyQUU3TW5QZk8ySkRmNEcyV3Y0NENSTWxtUW91WHY3QT0" http://localhost:3000/api/protected
+{"message":"Authorized"}%
+```
+
+```
+curl -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiSm9obiBEb2UiLCJzdWIiOiJ1c2VyMTIzIiwiZXhwIjoxNzIxODc3NzU3fQ.czNLQjA0cHNPK0JHemFGU291bFA0MS9NNW5LT3lVOSt4cUlpNW5Y" http://localhost:3000/api/protected
+{"message":"unauthorized"}%
+```
